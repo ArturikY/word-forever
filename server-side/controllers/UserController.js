@@ -12,12 +12,8 @@ export const register = async (req, res) => {
 				child_name: req.body.child_name,
 			},
 			include: {
-				statistics: {
-					include: true
-				},
-				cards: {
-					include: true
-				},
+				statistics: true,
+				cards: true,
 			},
 		})
 
@@ -31,7 +27,7 @@ export const register = async (req, res) => {
 			}
 		)
 
-		res.json({...user, token})
+		res.json({ ...user, token })
 	} catch (err) {
 		console.log(err)
 		res.status(500).json({
@@ -48,8 +44,8 @@ export const login = async (req, res) => {
 				password: req.body.password,
 			},
 			include: {
-				statistics: inlcude,
-				cards: include,
+				statistics: true,
+				cards: true,
 			},
 		})
 
@@ -69,7 +65,7 @@ export const login = async (req, res) => {
 			}
 		)
 
-		res.json(token)
+		res.json({ ...user, token })
 	} catch (err) {
 		console.log(err)
 		res.status(500).json({
@@ -85,8 +81,8 @@ export const getMe = async (req, res) => {
 				id: req.userId,
 			},
 			include: {
-				statistics: inlcude,
-				cards: include,
+				statistics: true,
+				cards: true,
 			},
 		})
 
@@ -115,8 +111,8 @@ export const updateMe = async (req, res) => {
 				child_name: req.body.child_name,
 			},
 			include: {
-				statistics: inlcude,
-				cards: include,
+				statistics: true,
+				cards: true,
 			},
 		})
 		res.json({
@@ -127,6 +123,29 @@ export const updateMe = async (req, res) => {
 		console.log(err)
 		res.status(500).json({
 			message: 'Failed to update a user',
+		})
+	}
+}
+
+export const pay = async (req, res) => {
+	try {
+		const user = await prisma.user.update({
+			where: {
+				id: req.userId,
+			},
+			data: {
+				date_over: req.body.date_over,
+				isTrial: true,
+			},
+		})
+		res.json({
+			...user,
+			success: true,
+		})
+	} catch (err) {
+		console.log(err)
+		res.status(500).json({
+			message: 'Failed to pay',
 		})
 	}
 }

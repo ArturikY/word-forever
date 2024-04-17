@@ -18,6 +18,8 @@ model User {
   login   String  @unique
   password String 
   child_name    String
+  isTrial   Boolean   @default(false)
+  date_over  String  @default("")
   statistics  Statistics[]
   cards Card[]
 }

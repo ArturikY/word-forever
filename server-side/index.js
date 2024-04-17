@@ -2,26 +2,33 @@ import cors from 'cors'
 import express from 'express'
 
 import {
-	UserController,
 	CardsController,
 	StatisticsController,
+	UserController,
 } from './controllers/controllers.js'
-import { checkAuth } from './utils/utils.js'
+import { checkAuth, handleValidationErrors } from './utils/utils.js'
+import { UserValidations } from './validations/validations.js'
 
 const app = express()
 
 app.use(express.json())
-app.use(cors({
-	origin: "*",
-	methods: ["GET", "POST"],
-	allowedHeaders: ['Content-type', 'Authorization'],
-	credentials: true,
-}))
+app.use(cors())
 
-app.post('/api/auth/login', UserController.login)
-app.post('/api/auth/register', UserController.register)
+app.post(
+	'/api/auth/login',
+	UserValidations.loginValid,
+	handleValidationErrors,
+	UserController.login
+)
+app.post(
+	'/api/auth/register',
+	UserValidations.registerValid,
+	handleValidationErrors,
+	UserController.register
+)
 app.get('/api/auth/me', checkAuth, UserController.getMe)
 app.patch('/api/auth/update', checkAuth, UserController.updateMe)
+app.patch('/api/auth/pay', checkAuth, UserController.pay)
 
 app.post('/api/cards', CardsController.create)
 
