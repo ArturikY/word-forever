@@ -484,8 +484,7 @@ header .head-social a:hover {
 	background: #E5E5E5;
 	padding: 35px 20px 40px;
 	min-height: 410px;
-	display: -webkit-box;
-	display: -ms-flexbox;
+
 	display: flex;
 	-webkit-box-orient: vertical;
 	-webkit-box-direction: normal;
@@ -526,6 +525,7 @@ header .head-social a:hover {
 	margin-top: -16px;
 	border: 1px solid #F2D842;
 }
+
 .subs-block.active .subs-img img {
 	height: 105px;
 }
@@ -1225,17 +1225,11 @@ path {
 }
 
 .adding-list {
-	display: -webkit-box;
-	display: -ms-flexbox;
 	display: flex;
-	-webkit-box-align: start;
-	    -ms-flex-align: start;
-	        align-items: flex-start;
-	-webkit-box-pack: center;
-	    -ms-flex-pack: center;
-	        justify-content: center;
-	gap: 0 90px;
-	height: 370px;
+	gap: 60px 90px;
+	padding: 10px;
+	flex-wrap: wrap;
+	min-height: 370px;
 	overflow-y: auto;
 	overflow-x: hidden;
 }
@@ -1246,6 +1240,47 @@ path {
 	color: #444444;
 	margin-bottom: 24px;
 }
+.adding-item {
+	width: min-content;
+	min-width: 150px;
+	display: flex;
+	flex-direction: column;
+}
+.adding-item.hide {
+	display: none;
+	opacity: 0;
+	visibility: hidden;
+	height: 0;
+	width: 0;
+}
+.confirm-delete-btn, .cancel-btn {
+	border: none;
+	color: white;
+	border-radius: 10px;
+	padding: 10px 26px;
+}
+.confirm-delete-btn {
+	background-color: rgb(177, 0, 0);
+}
+.confirm-delete-btn:hover {
+	
+	background-color: rgb(234, 0, 0);
+}
+.cancel-btn:hover {
+	background-color: #4194f9;
+}
+.cancel-btn {
+	background-color: #66acff;
+}
+.confirm-container {
+	display: flex;
+	gap: 50px;
+	justify-content: center;
+}
+.adding-item label.hide {
+	display: none;
+}
+
 .words {
 	display: -webkit-box;
 	display: -ms-flexbox;
@@ -1289,10 +1324,13 @@ path {
 	text-align: center;
 	margin: 24px 0;
 }
+
 .adding-btn .btn-add {
+	border: none;
 	border-radius: 10px;
 	padding: 16px 60px;
-	background: #66ACFF;
+	background: #4a98f7;
+	opacity: 1;
 	font-size: 16px;
 	font-weight: 700;
 	line-height: 19.36px;
@@ -1307,6 +1345,11 @@ path {
 	        justify-content: center;
 	color: #fff;
 }
+.btn-add:disabled {
+	background: #79b2f8;
+	opacity: 0.7;
+}
+
 
 
 .top-title {
@@ -2353,9 +2396,6 @@ footer .ftr-end a {
 }
 
 
-
-
-
 .mob {display: none !important;}
 
 
@@ -2383,7 +2423,7 @@ footer .ftr-end a {
 
 
 
-@media only screen and (max-width: 576px){
+@media only screen and (max-width: 800px){
 	.mob {display: block !important;}
 	.pc {display: none !important;}
 
@@ -2918,9 +2958,7 @@ footer .ftr-end a {
 	.adding-words .in-title {
 		margin-bottom: 30px;
 	}
-	.adding-list {
-		gap: 0 20px;
-	}
+	
 	.word-title p {
 		color: #F2D842;
 	}

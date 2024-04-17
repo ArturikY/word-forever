@@ -8,7 +8,7 @@
 		<link rel="stylesheet icon" type="text/css" href="css/style.css" media="screen">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta charset="UTF-8">
-		<title>Title</title>
+		<title>Личный кабинет</title>
 	</head>
 	<body>
 		<div class="wrapper">
@@ -19,12 +19,12 @@
                     <div class="prsn-rov">
                         <div class="prsn-sidebar">
                             <div class="side-logo">
-                                <a href="#!"><img src="images/logo.svg" alt=""></a>
+                                <a href="/index.html"><img src="images/logo.svg" alt=""></a>
                             </div>
     
                             <div class="side-menu">
                                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                                    <button class="nav-link" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="false">
+                                    <button class="nav-link active nav-link-cards" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="false">
                                         <span class="icon pc">
                                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M7 11.5C6.44772 11.5 6 11.0523 6 10.5V7C6 6.44772 6.44772 6 7 6H10.5C11.0523 6 11.5 6.44772 11.5 7V10.5C11.5 11.0523 11.0523 11.5 10.5 11.5H7ZM7 18C6.44772 18 6 17.5523 6 17V13.5C6 12.9477 6.44772 12.5 7 12.5H10.5C11.0523 12.5 11.5 12.9477 11.5 13.5V17C11.5 17.5523 11.0523 18 10.5 18H7ZM13.5 11.5C12.9477 11.5 12.5 11.0523 12.5 10.5V7C12.5 6.44772 12.9477 6 13.5 6H17C17.5523 6 18 6.44772 18 7V10.5C18 11.0523 17.5523 11.5 17 11.5H13.5ZM13.5 18C12.9477 18 12.5 17.5523 12.5 17V13.5C12.5 12.9477 12.9477 12.5 13.5 12.5H17C17.5523 12.5 18 12.9477 18 13.5V17C18 17.5523 17.5523 18 17 18H13.5ZM5 21C4.45 21 3.97933 20.8043 3.588 20.413C3.19667 20.0217 3.00067 19.5507 3 19V5C3 4.45 3.196 3.97933 3.588 3.588C3.98 3.19667 4.45067 3.00067 5 3H19C19.55 3 20.021 3.196 20.413 3.588C20.805 3.98 21.0007 4.45067 21 5V19C21 19.55 20.8043 20.021 20.413 20.413C20.0217 20.805 19.5507 21.0007 19 21H5ZM5 18C5 18.5523 5.44772 19 6 19H18C18.5523 19 19 18.5523 19 18V6C19 5.44772 18.5523 5 18 5H6C5.44772 5 5 5.44772 5 6V18Z" fill="#444444"/>
@@ -91,7 +91,7 @@
                             </div>
     
                             <div class="side-links">
-                                <a href="#!" class="back-home">Вернуться на сайт</a>
+                                <a href="/index.html" class="back-home">Вернуться на сайт</a>
                                 <a href="#!" class="exit-btn">Выйти из аккаунта</a>
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                             </div>
 
                             <div class="tab-content" id="v-pills-tabContent">
-                                <div class="tab-pane fade" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                                <div class="tab-pane fade active show" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                                     <div class="adding-words all-style">
                                         <div class="in-title">
                                             <span>Добавление слов</span>
@@ -112,7 +112,7 @@
                                         <div class="adding-block">
                                             <div class="adding-search">
                                                 <div class="form-group">
-                                                    <input type="text" name="search" placeholder="Искать">
+                                                    <input type="text" class="search" name="search" placeholder="Искать">
                                                     <button type="button" class="adding-search"><img src="images/icons/search-icon.svg" alt=""></button>
                                                 </div>
                                                 <div class="check-all">
@@ -130,78 +130,7 @@
                                                         <p>Аа</p>
                                                     </div>
                                                     <div class="words">
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>аллея</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>аккуратно</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>абрикос</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>аромат</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>автобус</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>артист</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>автомобиль</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>агроном</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>адрес</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>аптека</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>абрикос</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>аромат</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>автобус</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>артист</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>автомобиль</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>агроном</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>адрес</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>аптека</span>
-                                                        </label>
+                                                        
                                                     </div>
                                                 </div>
                                                 <div class="adding-item">
@@ -209,80 +138,226 @@
                                                         <p>Бб</p>
                                                     </div>
                                                     <div class="words">
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>баран</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>баранка</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>балкон</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>барабан</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>берёза</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>берег</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>билет</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>беседа</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>болото</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>быстро</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>барабан</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>берёза</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>берег</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>билет</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>беседа</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>болото</span>
-                                                        </label>
-                                                        <label>
-                                                            <input type="checkbox">
-                                                            <span>быстро</span>
-                                                        </label>
+                                                        
                                                     </div>
                                                 </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Вв</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Гг</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Дд</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Ее</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Ёё</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Жж</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Зз</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Ии</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Йй</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Кк</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Лл</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Нн</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Оо</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Пп</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Рр</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Сс</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Тт</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Уу</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Фф</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Хх</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Цц</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Чч</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Шш</p>
+                                                    </div>
+                                                    <div class="words">
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Щщ</p>
+                                                    </div>
+                                                    <div class="words">
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Ээ</p>
+                                                    </div>
+                                                    <div class="words">
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Юю</p>
+                                                    </div>
+                                                    <div class="words">
+                                                    </div>
+                                                </div>
+                                                <div class="adding-item">
+                                                    <div class="word-title">
+                                                        <p>Яя</p>
+                                                    </div>
+                                                    <div class="words">
+                                                        
+                                                    </div>
+                                                </div>
+
                                             </div>
 
                                             <div class="adding-btn">
-                                                <a href="card.html" class="btn-add">Добавить</a>
+                                                <button disabled class="btn-add">Добавить</button>
                                             </div>
                                         </div>
                                     </div>
@@ -367,7 +442,7 @@
                                             <span>Мои данные</span>
                                         </div>
 
-                                        <form action="#!">
+                                        <form action="#!" class="editProfileData">
                                             <div class="data-form">
                                                 <div class="form-group">
                                                     <input type="text" name="name" placeholder="Имя ребенка">
@@ -404,7 +479,7 @@
 
                                                 <div class="form-btns">
                                                     <button type="submit" class="save-btn">Сохранить данные</button>
-                                                    <button type="button" class="delete-btn">Удалить профиль</button>
+                                                    <button type="button" data-bs-toggle="modal" data-bs-target="#deleteConfirm" class="delete-btn">Удалить профиль</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -412,7 +487,7 @@
                                 </div>
 
                                 <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
-                                    <div class="subs-tab mb-4">
+                                    <div class="subs-tab mb-4 unsubscribed">
                                         <div class="in-title">
                                             <span>Подписка</span>
                                         </div>
@@ -472,7 +547,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="subs-tab mb-4">
+                                    <div class="subs-tab mb-4 subscribed">
                                         <div class="top-title">
                                             <span>ПОДПИСКА СТАРТ:</span>
                                             <p>Действительна с 01.01.2024 по 01.01.2025</p>
@@ -538,7 +613,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="subs-tab">
+                                    <div class="subs-tab aftertrial">
                                         <div class="top-title">
                                             <span>ПОДПИСКА СТАРТ:</span>
                                             <p>Действительна с 01.01.2024 по 01.01.2025</p>
@@ -645,6 +720,28 @@
                                 </div>
                             </div>
                         </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="deleteConfirm" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 1L1 15M1 1L15 15" stroke="#A2A2A2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>                                
+                        </button>
+                        <div class="title-modal">
+                            <p>Подтверждение</p>
+                        </div>
+
+                        <div class="confirm-container">
+                            <button type="submit" data-bs-dismiss="modal" aria-label="Close" class="send-btn confirm-delete-btn">Удалить</button>
+                            <button type="submit" data-bs-dismiss="modal" aria-label="Close" class="send-btn cancel-btn">Оставить</button>
+                            
+                        </div>
                     </div>
                 </div>
             </div>
