@@ -8,7 +8,7 @@
 		<link rel="stylesheet icon" type="text/css" href="css/style.css" media="screen">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<meta charset="UTF-8">
-		<title>Title</title>
+		<title>Личный кабинет</title>
 	</head>
 	<body>
 		<div class="wrapper">
@@ -19,12 +19,12 @@
                     <div class="prsn-rov">
                         <div class="prsn-sidebar">
                             <div class="side-logo">
-                                <a href="#!"><img src="images/logo.svg" alt=""></a>
+                                <a href="/index.html"><img src="images/logo.svg" alt=""></a>
                             </div>
     
                             <div class="side-menu">
                                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                                    <button class="nav-link" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="false">
+                                    <button class="nav-link active nav-link-cards" id="v-pills-home-tab" data-bs-toggle="pill" data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home" aria-selected="false">
                                         <span class="icon pc">
                                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M7 11.5C6.44772 11.5 6 11.0523 6 10.5V7C6 6.44772 6.44772 6 7 6H10.5C11.0523 6 11.5 6.44772 11.5 7V10.5C11.5 11.0523 11.0523 11.5 10.5 11.5H7ZM7 18C6.44772 18 6 17.5523 6 17V13.5C6 12.9477 6.44772 12.5 7 12.5H10.5C11.0523 12.5 11.5 12.9477 11.5 13.5V17C11.5 17.5523 11.0523 18 10.5 18H7ZM13.5 11.5C12.9477 11.5 12.5 11.0523 12.5 10.5V7C12.5 6.44772 12.9477 6 13.5 6H17C17.5523 6 18 6.44772 18 7V10.5C18 11.0523 17.5523 11.5 17 11.5H13.5ZM13.5 18C12.9477 18 12.5 17.5523 12.5 17V13.5C12.5 12.9477 12.9477 12.5 13.5 12.5H17C17.5523 12.5 18 12.9477 18 13.5V17C18 17.5523 17.5523 18 17 18H13.5ZM5 21C4.45 21 3.97933 20.8043 3.588 20.413C3.19667 20.0217 3.00067 19.5507 3 19V5C3 4.45 3.196 3.97933 3.588 3.588C3.98 3.19667 4.45067 3.00067 5 3H19C19.55 3 20.021 3.196 20.413 3.588C20.805 3.98 21.0007 4.45067 21 5V19C21 19.55 20.8043 20.021 20.413 20.413C20.0217 20.805 19.5507 21.0007 19 21H5ZM5 18C5 18.5523 5.44772 19 6 19H18C18.5523 19 19 18.5523 19 18V6C19 5.44772 18.5523 5 18 5H6C5.44772 5 5 5.44772 5 6V18Z" fill="#444444"/>
@@ -91,7 +91,7 @@
                             </div>
     
                             <div class="side-links">
-                                <a href="#!" class="back-home">Вернуться на сайт</a>
+                                <a href="/index.html" class="back-home">Вернуться на сайт</a>
                                 <a href="#!" class="exit-btn">Выйти из аккаунта</a>
                             </div>
                         </div>
@@ -102,7 +102,7 @@
                             </div>
 
                             <div class="tab-content" id="v-pills-tabContent">
-                                <div class="tab-pane fade" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                                <div class="tab-pane fade active show" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
                                     <div class="finish-block all-style">
                                         <div class="in-title blue">
                                             <span>ТЕСТИРОВАНИЕ ЗАВЕРШЕНО</span>
@@ -238,7 +238,57 @@
 
                                                 <div class="form-btns">
                                                     <button type="submit" class="save-btn">Сохранить данные</button>
-                                                    <button type="button" class="delete-btn">Удалить профиль</button>
+                                                    <button type="button" data-bs-toggle="modal" data-bs-target="#deleteConfirm" class="delete-btn">Удалить профиль</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="v-pills-messages" role="tabpanel" aria-labelledby="v-pills-messages-tab">
+                                    <div class="my-data">
+                                        <div class="in-title">
+                                            <span>Мои данные</span>
+                                        </div>
+
+                                        <form action="#!" class="editProfileData">
+                                            <div class="data-form">
+                                                <div class="form-group">
+                                                    <input type="text" name="name" placeholder="Имя ребенка">
+                                                    <button type="button" class="change-btn">
+                                                        <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path opacity="0.5" d="M2.08333 14.1493H3.38958L12.35 5.56224L11.0437 4.31042L2.08333 12.8975V14.1493ZM0.25 15.9062V12.1727L12.35 0.598872C12.5333 0.437818 12.7358 0.313368 12.9573 0.225521C13.1788 0.137674 13.4118 0.09375 13.6562 0.09375C13.9007 0.09375 14.1375 0.137674 14.3667 0.225521C14.5958 0.313368 14.7944 0.445139 14.9625 0.620833L16.2229 1.85069C16.4062 2.01175 16.5399 2.20208 16.624 2.4217C16.708 2.64132 16.75 2.86094 16.75 3.08056C16.75 3.31481 16.708 3.53809 16.624 3.75039C16.5399 3.96269 16.4062 4.15668 16.2229 4.33238L4.14583 15.9062H0.25ZM11.6854 4.94731L11.0437 4.31042L12.35 5.56224L11.6854 4.94731Z" fill="#A2A2A2"/>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="email" name="email" placeholder="Email">
+                                                    <button type="button" class="change-btn">
+                                                        <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path opacity="0.5" d="M2.08333 14.1493H3.38958L12.35 5.56224L11.0437 4.31042L2.08333 12.8975V14.1493ZM0.25 15.9062V12.1727L12.35 0.598872C12.5333 0.437818 12.7358 0.313368 12.9573 0.225521C13.1788 0.137674 13.4118 0.09375 13.6562 0.09375C13.9007 0.09375 14.1375 0.137674 14.3667 0.225521C14.5958 0.313368 14.7944 0.445139 14.9625 0.620833L16.2229 1.85069C16.4062 2.01175 16.5399 2.20208 16.624 2.4217C16.708 2.64132 16.75 2.86094 16.75 3.08056C16.75 3.31481 16.708 3.53809 16.624 3.75039C16.5399 3.96269 16.4062 4.15668 16.2229 4.33238L4.14583 15.9062H0.25ZM11.6854 4.94731L11.0437 4.31042L12.35 5.56224L11.6854 4.94731Z" fill="#A2A2A2"/>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="password" name="password" placeholder="Пароль">
+                                                    <button type="button" class="change-btn">
+                                                        <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path opacity="0.5" d="M2.08333 14.1493H3.38958L12.35 5.56224L11.0437 4.31042L2.08333 12.8975V14.1493ZM0.25 15.9062V12.1727L12.35 0.598872C12.5333 0.437818 12.7358 0.313368 12.9573 0.225521C13.1788 0.137674 13.4118 0.09375 13.6562 0.09375C13.9007 0.09375 14.1375 0.137674 14.3667 0.225521C14.5958 0.313368 14.7944 0.445139 14.9625 0.620833L16.2229 1.85069C16.4062 2.01175 16.5399 2.20208 16.624 2.4217C16.708 2.64132 16.75 2.86094 16.75 3.08056C16.75 3.31481 16.708 3.53809 16.624 3.75039C16.5399 3.96269 16.4062 4.15668 16.2229 4.33238L4.14583 15.9062H0.25ZM11.6854 4.94731L11.0437 4.31042L12.35 5.56224L11.6854 4.94731Z" fill="#A2A2A2"/>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="password" name="confirm_password" placeholder="Подтверждение пароля">
+                                                    <button type="button" class="change-btn">
+                                                        <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                            <path opacity="0.5" d="M2.08333 14.1493H3.38958L12.35 5.56224L11.0437 4.31042L2.08333 12.8975V14.1493ZM0.25 15.9062V12.1727L12.35 0.598872C12.5333 0.437818 12.7358 0.313368 12.9573 0.225521C13.1788 0.137674 13.4118 0.09375 13.6562 0.09375C13.9007 0.09375 14.1375 0.137674 14.3667 0.225521C14.5958 0.313368 14.7944 0.445139 14.9625 0.620833L16.2229 1.85069C16.4062 2.01175 16.5399 2.20208 16.624 2.4217C16.708 2.64132 16.75 2.86094 16.75 3.08056C16.75 3.31481 16.708 3.53809 16.624 3.75039C16.5399 3.96269 16.4062 4.15668 16.2229 4.33238L4.14583 15.9062H0.25ZM11.6854 4.94731L11.0437 4.31042L12.35 5.56224L11.6854 4.94731Z" fill="#A2A2A2"/>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+
+                                                <div class="form-btns">
+                                                    <button type="submit" class="save-btn">Сохранить данные</button>
+                                                    <button type="button" data-bs-toggle="modal" data-bs-target="#deleteConfirm" class="delete-btn">Удалить профиль</button>
                                                 </div>
                                             </div>
                                         </form>
@@ -246,7 +296,7 @@
                                 </div>
 
                                 <div class="tab-pane fade" id="v-pills-settings" role="tabpanel" aria-labelledby="v-pills-settings-tab">
-                                    <div class="subs-tab">
+                                    <div class="subs-tab mb-4 unsubscribed">
                                         <div class="in-title">
                                             <span>Подписка</span>
                                         </div>
@@ -266,6 +316,124 @@
                                                     </div>
                                                 </div>
                                             </div>
+                
+                                            <div class="col-lg-4 plr-8">
+                                                <div class="subs-block active">
+                                                    <img src="images/icons/red-mark.svg" alt="" class="mark-img">
+                
+                                                    <div class="subs-img">
+                                                        <img src="images/icons/subs-icon2.svg" alt="">
+                                                    </div>
+                                                    <div class="subs-text">
+                                                        <span>ПРОФИ <span>1800 руб/год</span></span>
+                                                        <p>1500 руб/год</p>
+                                                        <ul>
+                                                            <li>-Доступ на год</li>
+                                                            <li>- Легко запомнить 400 словарных слов НАВСЕГДА</li>
+                                                            <li>- Словарный диктант ВСЕГДА на «5»</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="subs-link">
+                                                        <a href="#!" class="blue-btn" data-bs-toggle="modal" data-bs-target="#paymentModal">Выбрать</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                
+                                            <div class="col-lg-4 plr-8">
+                                                <div class="subs-block">
+                                                    <div class="subs-img">
+                                                        <img src="images/icons/subs-icon3.svg" alt="">
+                                                    </div>
+                                                    <div class="subs-text">
+                                                        <span>КОМФОРТ</span>
+                                                        <p>1500 руб/год <span>Доступ на 7 дней</span></p>
+                                                    </div>
+                                                    <div class="subs-link">
+                                                        <a href="#!" class="blue-btn" data-bs-toggle="modal" data-bs-target="#paymentModal">Выбрать</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="subs-tab mb-4 subscribed">
+                                        <div class="top-title">
+                                            <span>ПОДПИСКА СТАРТ:</span>
+                                            <p>Действительна с 01.01.2024 по 01.01.2025</p>
+                                            <a href="#!">Продлить</a>
+                                        </div>
+
+                                        <div class="in-title">
+                                            <span>Сменить подписку</span>
+                                        </div>
+
+                                        <div class="row subs-rov mlr-8">
+                                            <div class="col-lg-4 plr-8">
+                                                <div class="subs-block">
+                                                    <div class="subs-img">
+                                                        <img src="images/icons/subs-icon.svg" alt="">
+                                                    </div>
+                                                    <div class="subs-text">
+                                                        <span>СТАРТ</span>
+                                                        <p>БЕСПЛАТНО <span>Доступ на 7 дней</span></p>
+                                                    </div>
+                                                    <div class="subs-link">
+                                                        <a href="#!" class="blue-btn disabled">Действительна</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                
+                                            <div class="col-lg-4 plr-8">
+                                                <div class="subs-block active">
+                                                    <img src="images/icons/red-mark.svg" alt="" class="mark-img">
+                
+                                                    <div class="subs-img">
+                                                        <img src="images/icons/subs-icon2.svg" alt="">
+                                                    </div>
+                                                    <div class="subs-text">
+                                                        <span>ПРОФИ <span>1800 руб/год</span></span>
+                                                        <p>1500 руб/год</p>
+                                                        <ul>
+                                                            <li>-Доступ на год</li>
+                                                            <li>- Легко запомнить 400 словарных слов НАВСЕГДА</li>
+                                                            <li>- Словарный диктант ВСЕГДА на «5»</li>
+                                                        </ul>
+                                                    </div>
+                                                    <div class="subs-link">
+                                                        <a href="#!" class="blue-btn" data-bs-toggle="modal" data-bs-target="#paymentModal">Выбрать</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                
+                                            <div class="col-lg-4 plr-8">
+                                                <div class="subs-block">
+                                                    <div class="subs-img">
+                                                        <img src="images/icons/subs-icon3.svg" alt="">
+                                                    </div>
+                                                    <div class="subs-text">
+                                                        <span>КОМФОРТ</span>
+                                                        <p>1500 руб/год <span>Доступ на 7 дней</span></p>
+                                                    </div>
+                                                    <div class="subs-link">
+                                                        <a href="#!" class="blue-btn" data-bs-toggle="modal" data-bs-target="#paymentModal">Выбрать</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="subs-tab aftertrial">
+                                        <div class="top-title">
+                                            <span>ПОДПИСКА СТАРТ:</span>
+                                            <p>Действительна с 01.01.2024 по 01.01.2025</p>
+                                            <a href="#!">Продлить</a>
+                                        </div>
+
+                                        <div class="in-title">
+                                            <span>Сменить подписку</span>
+                                        </div>
+
+                                        <div class="row subs-rov mlr-8 subs-valid">
                 
                                             <div class="col-lg-4 plr-8">
                                                 <div class="subs-block active">
@@ -366,7 +534,28 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="deleteConfirm" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 1L1 15M1 1L15 15" stroke="#A2A2A2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>                                
+                        </button>
+                        <div class="title-modal">
+                            <p>Подтверждение</p>
+                        </div>
 
+                        <div class="confirm-container">
+                            <button type="submit" data-bs-dismiss="modal" aria-label="Close" class="send-btn confirm-delete-btn">Удалить</button>
+                            <button type="submit" data-bs-dismiss="modal" aria-label="Close" class="send-btn cancel-btn">Оставить</button>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 		<!-- Modal Reg -->
         <div class="modal fade" id="regModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
