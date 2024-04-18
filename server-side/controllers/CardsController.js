@@ -6,13 +6,12 @@ export const create = async (req, res) => {
 	try {
 		const card = await prisma.card.create({
 			data: {
-				number: req.body.number,
 				words: req.body.words,
 				user: { connect: { id: req.userId } },
 			},
 			include: {
-				user: include,
-				words: include,
+				user: true,
+				words: true,
 			},
 		})
 		res.json(card)
@@ -20,6 +19,32 @@ export const create = async (req, res) => {
 		console.log(err)
 		res.status(500).json({
 			message: 'Failed to create a card',
+		})
+	}
+}
+
+export const getOne = async (req, res) => {
+	try {
+		const cardId = req.params.id
+		const card = await prisma.card.findUnique({
+			where: { id: +cardId },
+			include: {
+				user: true,
+				words: true,
+			},
+		})
+
+		if (!card) {
+			return res.status(500).json({
+				message: 'Failed to find a card',
+			})
+		}
+
+		res.json(product)
+	} catch (err) {
+		console.log(err)
+		res.status(500).json({
+			message: 'Filed to get a card',
 		})
 	}
 }

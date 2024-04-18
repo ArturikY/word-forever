@@ -313,10 +313,9 @@ document.querySelectorAll('.tariff-pay-btn').forEach(btn => {
 				requestOptions
 			)
 			const { success, user } = await response.json()
-			if (data?.success && data?.user?.date_over) {
-				// window.location.href = '/personal-cabinet.html'
-				localStorage.setItem('date_over', data?.user?.date_over)
-				console.log(localStorage.getItem('date_over'))
+			if (success && user) {
+				localStorage.setItem('date_over', user?.date_over)
+				window.location.href = '/personal-cabinet.html'
 			}
 		} else {
 			console.log('Complete authorization!')

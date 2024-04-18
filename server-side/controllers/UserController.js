@@ -27,7 +27,7 @@ export const register = async (req, res) => {
 			}
 		)
 
-		res.json({ ...user, token })
+		res.json({ user, token })
 	} catch (err) {
 		console.log(err)
 		res.status(500).json({
@@ -65,7 +65,7 @@ export const login = async (req, res) => {
 			}
 		)
 
-		res.json({ ...user, token })
+		res.json({ user, token })
 	} catch (err) {
 		console.log(err)
 		res.status(500).json({
@@ -117,7 +117,7 @@ export const updateMe = async (req, res) => {
 		})
 		res.json({
 			success: true,
-			user: user,
+			user,
 		})
 	} catch (err) {
 		console.log(err)
@@ -139,7 +139,7 @@ export const pay = async (req, res) => {
 			},
 		})
 		res.json({
-			...user,
+			user,
 			success: true,
 		})
 	} catch (err) {

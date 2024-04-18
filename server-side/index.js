@@ -5,6 +5,7 @@ import {
 	CardsController,
 	StatisticsController,
 	UserController,
+	WordsController,
 } from './controllers/controllers.js'
 import { checkAuth, handleValidationErrors } from './utils/utils.js'
 import { UserValidations } from './validations/validations.js'
@@ -31,6 +32,9 @@ app.patch('/api/auth/update', checkAuth, UserController.updateMe)
 app.patch('/api/auth/pay', checkAuth, UserController.pay)
 
 app.post('/api/cards', CardsController.create)
+app.get('api/cards/:id', CardsController.getOne)
+
+app.get('/api/words', WordsController.getAll)
 
 app.post('/api/statistics', StatisticsController.create)
 
