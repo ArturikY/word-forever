@@ -26,26 +26,23 @@ model User {
 
 model Card {
   id  Int   @id @default(autoincrement())
-  number  Int
-  words Word[]
+  words String[]
   user   User @relation(fields: [userId], references: [id])
-  userId Int @unique
+  userId Int 
 }
 
 model Word {
   id  Int   @id @default(autoincrement())
   name  String
   image_url String
-  letters Int[]
-  card  Card @relation(fields: [cardId], references: [id])
-  cardId Int @unique
+  letters String
 }
 
 model Statistics {
-  id      Int   @id @default(autoincrement())
+  id      String   @id 
   word    String
   errors_count Int
   user   User @relation(fields: [userId], references: [id])
-  userId Int @unique
+  userId Int 
 }
 

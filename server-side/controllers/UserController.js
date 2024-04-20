@@ -1,14 +1,21 @@
 import { PrismaClient } from '@prisma/client'
 import jwt from 'jsonwebtoken'
+// FIXME:
+import bcrypt from 'bcrypt'
 
 const prisma = new PrismaClient()
 
+// FIXME:
 export const register = async (req, res) => {
 	try {
+		const password = req.body.password
+		const salt = await bcrypt.genSalt(13)
+		const passwordHash = await bcrypt.hash(password, salt)
+
 		const user = await prisma.user.create({
 			data: {
 				login: req.body.login,
-				password: req.body.password,
+				password: passwordHash,
 				child_name: req.body.child_name,
 			},
 			include: {
@@ -27,7 +34,9 @@ export const register = async (req, res) => {
 			}
 		)
 
-		res.json({ user, token })
+		const { pass, ...resUser } = user
+
+		res.json({ resUser, token })
 	} catch (err) {
 		console.log(err)
 		res.status(500).json({
@@ -36,12 +45,12 @@ export const register = async (req, res) => {
 	}
 }
 
+// FIXME:
 export const login = async (req, res) => {
 	try {
 		const user = await prisma.user.findUnique({
 			where: {
 				login: req.body.login,
-				password: req.body.password,
 			},
 			include: {
 				statistics: true,
@@ -51,7 +60,15 @@ export const login = async (req, res) => {
 
 		if (!user) {
 			return res.status(404).json({
-				message: 'User not found',
+				message: 'Invalid login or password',
+			})
+		}
+
+		const isValidPass = await bcrypt.compare(req.body.password, user.password)
+
+		if (!isValidPass) {
+			return res.status(404).json({
+				message: 'Invalid login or password',
 			})
 		}
 
@@ -65,6 +82,8 @@ export const login = async (req, res) => {
 			}
 		)
 
+		user.password = ''
+
 		res.json({ user, token })
 	} catch (err) {
 		console.log(err)
@@ -74,6 +93,7 @@ export const login = async (req, res) => {
 	}
 }
 
+// FIXME:
 export const getMe = async (req, res) => {
 	try {
 		const user = await prisma.user.findUnique({
@@ -90,7 +110,8 @@ export const getMe = async (req, res) => {
 			return res.status(404).json({ message: 'User not found' })
 		}
 
-		res.json({ ...user })
+		user.password = ''
+		res.json(user)
 	} catch (err) {
 		console.log(err)
 		res.status(500).json({
@@ -99,15 +120,20 @@ export const getMe = async (req, res) => {
 	}
 }
 
+// FIXME:
 export const updateMe = async (req, res) => {
 	try {
+		const password = req.body.password
+		const salt = await bcrypt.genSalt(13)
+		const passwordHash = await bcrypt.hash(password, salt)
+
 		const user = await prisma.user.update({
 			where: {
 				id: req.userId,
 			},
 			data: {
 				login: req.body.login,
-				password: req.body.password,
+				password: passwordHash,
 				child_name: req.body.child_name,
 			},
 			include: {
@@ -115,6 +141,9 @@ export const updateMe = async (req, res) => {
 				cards: true,
 			},
 		})
+		user.password = ''
+		console.log(user)
+
 		res.json({
 			success: true,
 			user,
@@ -127,6 +156,7 @@ export const updateMe = async (req, res) => {
 	}
 }
 
+// FIXME:
 export const pay = async (req, res) => {
 	try {
 		const user = await prisma.user.update({
@@ -138,6 +168,9 @@ export const pay = async (req, res) => {
 				isTrial: true,
 			},
 		})
+
+		user.password = ''
+
 		res.json({
 			user,
 			success: true,
@@ -146,6 +179,30 @@ export const pay = async (req, res) => {
 		console.log(err)
 		res.status(500).json({
 			message: 'Failed to pay',
+		})
+	}
+}
+
+// FIXME:
+export const remove = async (req, res) => {
+	try {
+		const user = await prisma.user.delete({
+			where: {
+				id: req.userId,
+			},
+		})
+
+		if (!user) {
+			return res.status(404).json({ message: 'User not found' })
+		}
+
+		res.json({
+			success: true,
+		})
+	} catch (err) {
+		console.log(err)
+		res.status(500).json({
+			message: 'Failed to remove user',
 		})
 	}
 }

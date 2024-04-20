@@ -98,9 +98,7 @@ $(document).ready(function () {
     submitHandler: function (form) {
       document
         .querySelector(".login-modal")
-        .addEventListener("submit", (e) =>
-          checkLogin(e, "http://localhost:5500/api/auth/login")
-        );
+        .addEventListener("submit", (e) => checkLogin(e, url + "/auth/login"));
     },
   });
 
@@ -128,21 +126,10 @@ $(document).ready(function () {
       document
         .querySelector(".reg-modal")
         .addEventListener("submit", (e) =>
-          checkLogin(e, "http://localhost:5500/api/auth/register")
+          checkLogin(e, url + "/auth/register")
         );
     },
   });
-
-  // Выбираем кнопку отправки формы
-  // $('#sign_in_btn').click(function () {
-  // 	// Вызов функции проверки формы
-  // 	if (validateForm()) {
-  // 		document
-  // 			.querySelector('.reg-modal')
-  // 			.addEventListener('submit', e => checkLogin(e))
-  // 	}
-  // })
-
   // Функция проверки формы
   function validateForm() {
     var isValid = true;
@@ -194,6 +181,51 @@ $(document).ready(function () {
     return isValid;
   }
 
+  if (document.querySelectorAll(".tariff-pay-btn")) {
+    // FIXME:
+    document.querySelectorAll(".tariff-pay-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        if (localStorage.getItem("token")) {
+          let newDateOver = "";
+          if (btn.getAttribute("id") === "btn-tariff-trial") {
+            newDateOver = createNewDateOver(7);
+          } else if (btn.getAttribute("id") === "btn-tariff-comfort") {
+            newDateOver = createNewDateOver(30);
+          } else if (btn.getAttribute("id") === "btn-tariff-prof") {
+            newDateOver = createNewDateOver(365);
+          }
+          const requestOptions = {
+            method: "PATCH",
+            headers: {
+              "Content-type": "application/json;charset=UTF-8",
+              "Access-Control-Allow-Origin": "*",
+              authorization: localStorage.getItem("token"),
+            },
+            body: JSON.stringify({
+              date_over: newDateOver,
+            }),
+          };
+          console.log(url + "/auth/pay");
+          const response = await fetch(url + "/auth/pay", requestOptions);
+          const { success, user } = await response.json();
+          console.log(success, user);
+          if (success && user) {
+            console.log("ты success долбаебббббб");
+            localStorage.setItem("date_over", user?.date_over);
+            window.location.href = "/personal-cabinet.html";
+          }
+          console.log(success, user);
+        }
+      });
+    });
+  }
+  if (document.querySelector(".exit-btn")) {
+    document.querySelector(".exit-btn").addEventListener("click", () => {
+      localStorage.removeItem("token");
+      window.location.href = "/index.html";
+    });
+  }
+
   // Функция для установки ошибки
   function setErrorFor(input, message) {
     var errorSpan = input.next(".error");
@@ -223,31 +255,21 @@ $(document).ready(function () {
     // Oddiy regex bilan tekshiramiz
     return /\S+@\S+\.\S+/.test(email);
   }
-  // const checkAuth = () => {
-  //   if (token && paySuccess) {
-  //     ////
-  //   }
-  //   if (token && !paySuccess) {
-  //     /////
-  //   }
-  // };
-  let cards = [
-    {
-      number: 0,
-      words: [],
-    },
-  ];
-  let words = [
-    { word: "Азбука", blur: "03" },
-    { word: "Игра", blur: "0" },
-    { word: "Полтинник", blur: "1" },
-    { word: "Жизнь", blur: "1" },
-    { word: "Мечта", blur: "1" },
-    { word: "сорок", blur: "1" },
-  ];
-  let filteredWords = Object.assign([], words);
+  const checkSignIn = () => {
+    console.log(window.localStorage.getItem("token"));
+    if (window.localStorage.getItem("token")) {
+      lkbtn = document.querySelector(".lk");
+      if (lkbtn) {
+        lkbtn.removeAttribute("data-bs-toggle");
+        lkbtn.removeAttribute("data-bs-target");
+        lkbtn.setAttribute("href", "/personal-cabinet.html");
+      }
+    }
+  };
+  checkSignIn();
+  const url = "http://localhost:5000/api";
 
-  async function checkLogin(e, url) {
+  async function checkLogin(e, currurl) {
     e.preventDefault();
     let formData = new FormData(e.target);
     const formDataObj = Object.fromEntries(formData.entries());
@@ -262,15 +284,15 @@ $(document).ready(function () {
       body: JSON.stringify(formDataObj),
     };
     try {
-      const response = await fetch(url, requestOptions);
+      const response = await fetch(currurl, requestOptions);
       const { user, token } = await response.json();
-      // Add date_over check
-      if (token && !user?.isTrial && !user?.date_over) {
+
+      if ((await isDate(user?.date_over)) == false) {
+        window.location.href = "tariff-plan.html";
+        localStorage.setItem("token", token);
+      } else if ((await token) && isDate(user?.date_over)) {
         localStorage.setItem("token", token);
         localStorage.setItem("date_over", user?.date_over);
-        window.location.href = "/tariff-plan.html";
-        // Add date_over check
-      } else if (user.isTrial || user.date_over) {
         window.location.href = "/personal-cabinet.html";
       }
     } catch (err) {
@@ -279,227 +301,525 @@ $(document).ready(function () {
     e.target.reset();
   }
 
-function createNewDateOver(addedPeriod) {
-  const currentDate = new Date();
-  const newDate = new Date(
-    currentDate.getTime() + addedPeriod * 24 * 60 * 60 * 1000
-  );
-  const day = newDate.getDate();
-  const month = newDate.getMonth() + 1; // Месяцы начинаются с 0
-  const year = newDate.getFullYear();
-  const newDateOver = `${day}.${month}.${year}`;
-  return newDateOver;
-}
+  function createNewDateOver(addedPeriod) {
+    const currentDate = new Date();
+    const newDate = new Date(
+      currentDate.getTime() + addedPeriod * 24 * 60 * 60 * 1000
+    );
+    const day = newDate.getDate();
+    const month = newDate.getMonth() + 1; // Месяцы начинаются с 0
+    const year = newDate.getFullYear();
+    const newDateOver = `${day}.${month}.${year}`;
+    return newDateOver;
+  }
+  // FIXME:
+  async function isDate(dateString) {
+    // Разбиваем строку даты на компоненты
+    console.log(dateString);
+    if (dateString) {
+      const parts = await dateString.split(".");
 
-//TODO: CheckAuth & GetMe + token in Fetch
-document.querySelectorAll(".tariff-pay-btn").forEach((btn) => {
-  btn.addEventListener("click", async () => {
-    if (localStorage.getItem("token")) {
-      let newDateOver = "";
-      if (btn.getAttribute("id") === "btn-tariff-trial") {
-        newDateOver = createNewDateOver(7);
-      }
-      const requestOptions = {
-        method: "PATCH",
-        headers: {
-          "Content-type": "application/json;charset=UTF-8",
-          "Access-Control-Allow-Origin": "*",
-          authorization: localStorage.getItem("token"),
-        },
-        body: JSON.stringify({
-          date_over: newDateOver,
-        }),
-      };
-      const response = await fetch(
-        "http://localhost:5500/api/auth/pay",
-        requestOptions
-      );
-      const { success, user } = await response.json();
-      if (success && user) {
-        localStorage.setItem("date_over", user?.date_over);
-        window.location.href = '/personal-cabinet.html'
-      }
+      // Получаем день, месяц и год из строки даты
+      const day = parseInt(parts[0]);
+      const month = parseInt(parts[1]) - 1; // Месяцы начинаются с 0
+      const year = parseInt(parts[2]);
+
+      // Создаем объект Date на основе компонентов даты
+      const targetDate = new Date(year, month, day);
+
+      // Получаем текущую дату
+      const currentDate = new Date();
+
+      // Сравниваем целевую дату с текущей датой
+      return !(targetDate < currentDate);
     } else {
-      console.log("Complete authorization!");
+      return false;
     }
-  });
-});
-
-const mainSideBtn = document.querySelector(".nav-link-cards");
-if (mainSideBtn) {
-  mainSideBtn.addEventListener("click", () => {
-    if (mainSideBtn.classList.contains("activity")) {
-      window.location.href = "/personal-cabinet.html";
-    }
-    // mainSideBtn.classList.toggle('activity')
-  });
-  if (window.innerWidth < 800) {
-    document.getElementById("v-pills-home-tab").classList.remove("active");
-    document.getElementById("v-pills-home-tab").classList.remove("activity");
-    document.getElementById("v-pills-home").classList.remove("active");
-    document.getElementById("v-pills-home").classList.remove("show");
   }
-  document
-    .querySelector(".nav-pills")
-    .querySelectorAll(".nav-link")
-    .forEach((btn) => {
-      btn.addEventListener("click", () => {
-        document
-          .querySelector(".nav-pills")
-          .querySelectorAll(".nav-link")
-          .forEach((btn) => {
-            btn.classList.remove("activity");
-          });
-        btn.classList.add("activity");
+
+  const mainSideBtn = document.querySelector(".nav-link-cards");
+  if (mainSideBtn) {
+    mainSideBtn.addEventListener("click", () => {
+      if (mainSideBtn.classList.contains("activity")) {
+        window.location.href = "/personal-cabinet.html";
+      }
+      // mainSideBtn.classList.toggle('activity')
+    });
+    // if (window.innerWidth < 800) {
+    //   document.getElementById("v-pills-home-tab").classList.remove("active");
+    //   document.getElementById("v-pills-home-tab").classList.remove("activity");
+    //   document.getElementById("v-pills-home").classList.remove("active");
+    //   document.getElementById("v-pills-home").classList.remove("show");
+    // }
+    document
+      .querySelector(".nav-pills")
+      .querySelectorAll(".nav-link")
+      .forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelector(".nav-pills")
+            .querySelectorAll(".nav-link")
+            .forEach((btn) => {
+              btn.classList.remove("activity");
+            });
+          btn.classList.add("activity");
+        });
       });
+  }
+  deleteProfileBtn = document.querySelector(".confirm-delete-btn");
+  saveDataBtn = document.querySelector(".save-btn");
+  if (deleteProfileBtn) {
+    deleteProfileBtn.addEventListener("click", () => {
+      deleteProfile();
     });
-}
-deleteProfileBtn = document.querySelector(".confirm-delete-btn");
-saveData = document.querySelector(".save-btn");
-if (deleteProfileBtn) {
-  deleteProfileBtn.addEventListener("click", () => {
-    deleteProfile();
-  });
-  saveData.addEventListener("click", () => {
-    editProfileData();
-  });
-}
+    if (document.querySelector(".editProfileData")) {
+      document
+        .querySelector(".editProfileData")
+        .addEventListener("submit", (e) => {
+          editProfileData(e);
+        });
+    }
+  }
 
-async function editProfileData() {
-  try {
-    personalData = new FormData(document.querySelector(".editProfileData"));
-    const personalDataObj = Object.fromEntries(personalData.entries());
-    editProfileUrl = "http://localhost:5500/api/auth/register";
-    const response = await fetch(editProfileUrl, {
-      method: "PATCH",
-      body: JSON.stringify(personalDataObj),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
-    const data = await response.json();
-  } catch (e) {
-    console.error(e);
+  const DrawUserInfo = async () => {
+    userInfo = await getUserInfo();
+    console.log(userInfo);
+    document.querySelector(".child_name").value = userInfo.child_name;
+    document.querySelector(".login").value = userInfo.login;
+
+    if (!(await isDate(userInfo?.date_over))) {
+      document.getElementById("v-pills-home-tab").classList.remove("active");
+      document.getElementById("v-pills-home").classList.remove("active");
+      document.getElementById("v-pills-home").classList.remove("show");
+
+      document.getElementById("v-pills-messages-tab").classList.add("active");
+      document.getElementById("v-pills-settings").classList.add("active");
+      document.getElementById("v-pills-settings").classList.add("show");
+    }
+
+    const unsubscribed = document.querySelector(".unsubscribed");
+    const subscribed = document.querySelector(".subscribed");
+    const aftertrial = document.querySelector(".aftertrial");
+    if (userInfo.isTrial) {
+      unsubscribed.classList.add("hide");
+      aftertrial.classList.add("hide");
+    } else if (userInfo) {
+      unsubscribed.classList.add("hide");
+      subscribed.classList.add("hide");
+    }
+  };
+  if (document.querySelector(".statistcs")) {
+    DrawUserInfo();
   }
-}
-async function deleteProfile() {
-  try {
-    deleteProfileUrl = "http://localhost:5500/api/auth/register";
-    const response = await fetch(deleteProfileUrl, {
-      method: "DELETE",
-      body: "delete",
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
-    const data = await response.json();
-  } catch (e) {
-    console.error(e);
-  }
-}
-const addinglist = document.querySelector(".adding-list");
-if (addinglist) {
-  document.querySelector(".btn-add").addEventListener("click", () => {
-    createNewCard();
-  });
-  async function createNewCard() {
+
+  async function editProfileData(ev) {
     try {
-      newCardUrl = "http://localhost:5500/api/auth/register";
-      const response = await fetch(newCardUrl, {
-        method: "POST",
-        body: JSON.stringify({words:addedWords}),
+      ev.preventDefault();
+      personalData = new FormData(ev.target);
+      const personalDataObj = Object.fromEntries(personalData.entries());
+      console.log(personalDataObj);
+      editProfileUrl = url + "/auth/update";
+      const response = await fetch(editProfileUrl, {
+        method: "PATCH",
+        body: JSON.stringify(personalDataObj),
         headers: {
           "Content-type": "application/json; charset=UTF-8",
           "Access-Control-Allow-Origin": "*",
+          authorization: localStorage.getItem("token"),
+        },
+      });
+      const userInfo = await response.json();
+      console.log(userInfo);
+    } catch (e) {
+      console.error(e);
+    }
+    ev.target.reset();
+    DrawUserInfo();
+  }
+  async function deleteProfile() {
+    try {
+      deleteProfileUrl = url + "/auth/delete";
+      const response = await fetch(deleteProfileUrl, {
+        method: "DELETE",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          "Access-Control-Allow-Origin": "*",
+          authorization: localStorage.getItem("token"),
         },
       });
       const data = await response.json();
+      console.log(data);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  async function getCurrCard() {
+    try {
+      cardId = window.localStorage.getItem("cardId");
+      console.log(cardId);
+      requestCardUrl = url + "/cards/" + cardId;
+      const response = await fetch(requestCardUrl, {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          "Access-Control-Allow-Origin": "*",
+          authorization: localStorage.getItem("token"),
+        },
+      });
+      const data = await response.json();
+      return data;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  async function showAllCards() {
+    const userInfo = await getUserInfo();
+    if (await isDate(userInfo?.date_over)) {
+      const cards = userInfo.cards;
+      const cardsContainer = document.querySelector(".mycards__container");
+      if (cards) {
+        cards.forEach((card, index) => {
+          cardhtml = document.createElement("div");
+          cardhtml.classList.add("col-lg-4");
+          cardhtml.classList.add("plr-12");
+          let wordsstring = "";
+          let k = 0;
+          for (const word of card.words) {
+            if (k == 7) break;
+            wordsstring += `<li>${word}</li>`;
+            k += 1;
+          }
+          cardhtml.innerHTML = `
+          <div class="card-item">
+              <div class="item-title">
+                  <p>КАРТОЧКА <span class='cardIndex'>${index + 1}</span></p>
+              </div>
+              <div class="item-list">
+                  <ul>
+                      ${wordsstring}
+                  </ul>
+              </div>
+              <div class="item-btn">
+                  <button class="blue-btn openCard">Посмотреть</button>
+              </div>
+          </div>`;
+          cardsContainer.appendChild(cardhtml);
+        });
+      }
+      //Обработка нажатия кнопок/передача id карточки
+      document.querySelectorAll(".openCard").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          index =
+            parseInt(
+              btn.parentElement.parentElement.querySelector(".cardIndex")
+                .textContent
+            ) - 1;
+          window.localStorage.setItem("cardId", cards[index].id);
+          window.location.href = "/card.html";
+        });
+      });
+    } else {
+      alert = document.createElement("div");
+      alert.classList.add("lk-alert");
+      alert.innerHTML = `<div class="alert alert-warning alert-dismissible fade show" role="alert">
+      Необходимо продлить подписку!
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>`;
+      document.querySelector("body").appendChild(alert);
+    }
+  }
+  const currcard = document.querySelector(".currentcard");
+  if (currcard) {
+    drawCurrCard();
+  }
+  function replaceCharAtIndex(str, index, newChar) {
+    if (index < 0 || index >= str.length) {
+      return str; // Если индекс находится за пределами строки, возвращаем исходную строку
+    }
+
+    const chars = str.split(""); // Преобразуем строку в массив символов
+    chars[index] = newChar; // Заменяем символ по индексу новым символом
+    return chars.join(""); // Преобразуем массив обратно в строку
+  }
+
+  async function drawCurrCard() {
+    const currcard = await getCurrCard();
+    const wordsContainer = document.querySelector(".card-words-item");
+    console.log(currcard);
+    currcard.words.forEach((word) => {
+      let wordhtml = document.createElement("p");
+      wordhtml.innerHTML = `${word}`;
+      wordsContainer.appendChild(wordhtml);
+    });
+  }
+  async function sendTestResults(results) {
+    try {
+      TestResultsUrl = url + "/statistics";
+      const response = await fetch(TestResultsUrl, {
+        method: "PUT",
+        body: JSON.stringify({ words: results }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          "Access-Control-Allow-Origin": "*",
+          authorization: localStorage.getItem("token"),
+        },
+      });
+      const userData = await response.json();
+      return userData;
     } catch (e) {
       console.error(e);
     }
   }
 
-  //активирую поиск
-  const search = document.querySelector(".search");
-  search.oninput = (e) => {
-    // resetWords();
-    checkSearch(e);
-    hideUnusedLetter();
-    console.log(addedWords);
-  };
-  //функция поиска
-  const checkSearch = (e) => {
-    if (e.target.value) {
-      let searchValue = e.target.value.trim().toLowerCase();
-      addinglist.querySelectorAll("label").forEach((label) => {
-        label.classList.remove("hide");
-        if (
-          label
-            .querySelector("span")
-            .textContent.toLowerCase()
-            .search(searchValue) === -1
-        ) {
-          label.classList.add("hide");
-        }
+  async function drawCurrTest() {
+    const currcard = await getCurrCard();
+    const allWords = await getAllWords();
+    const wordsContainer = document.querySelector(".test-list");
+    const input = '<input class="wordinput" type="text" maxlength="1">';
+    const inputLength = input.length;
+    let currWords = [];
+    currcard.words.forEach((word) => {
+      let currWord = allWords.filter(
+        (alphabetword) => alphabetword.name == word
+      );
+      currWords.push(currWord[0]);
+      letters = currWord[0].letters.split(" ");
+      let addingString = word;
+      letters.forEach((letter, index) => {
+        subIndex = parseInt(letter) + index * (inputLength - 1);
+        addingString = replaceCharAtIndex(addingString, subIndex, input);
       });
-    } else {
-      addinglist.querySelectorAll("label").forEach((label) => {
-        label.classList.remove("hide");
-      });
-    }
-  };
 
-  //прячу все буквы, где нет слов
-  addedWords = [];
-  const hideUnusedLetter = () => {
-    addinglist.querySelectorAll(".adding-item").forEach((item) => {
-      flag = true;
-      item.querySelectorAll("label").forEach((label) => {
-        if (!label.classList.contains("hide")) {
-          flag = false;
-        }
-      });
-      if (flag) {
-        item.classList.add("hide");
-      } else {
-        item.classList.remove("hide");
-      }
+      let wordhtml = document.createElement("p");
+      wordhtml.innerHTML = `${addingString}`;
+      wordsContainer.appendChild(wordhtml);
     });
-  };
+    wordInputs = document.querySelectorAll(".wordinput");
+    checkbtn = document.querySelector(".check-btn");
+    solvedWords = [];
+    console.log("currWords:", currWords);
+    checkbtn.addEventListener("click", () => {
+      wordsContainer.querySelectorAll("p").forEach((checkword) => {
+        solvedCurrWord = [];
+        checkword.querySelectorAll(".wordinput").forEach((input) => {
+          solvedCurrWord.push(input.value);
+        });
+        solvedWords.push(solvedCurrWord);
+      });
+      console.log("solvedwords", solvedWords);
+      correctCount = 0;
+      mistakes = [];
+      for (let x = 0; x < currWords.length; x++) {
+        flag = true;
+        for (let y = 0; y < currWords[x].letters.split(" ").length; y++) {
+          correctLetter = currWords[x].name[currWords[x].letters.split(" ")[y]];
+          insertLetter = solvedWords[x][y];
+          if (correctLetter != insertLetter) {
+            flag = false;
+            mistakes.push(currWords[x].name);
+            break;
+          } else {
+            correctCount += 1;
+          }
+          console.log(
+            "введенная",
+            insertLetter,
+            "правильная",
+            correctLetter,
+            "в слове",
+            currWords[x].name
+          );
+        }
+      }
+      console.log(mistakes);
+      sendTestResults(mistakes).then((stat) => console.log(stat));
+      window.localStorage.setItem("correctWords", correctCount);
+    });
+  }
+  if (document.querySelector(".test-list")) {
+    drawCurrTest();
+  }
 
-  //вывод отфильтрованных слов
-  const showFilteredWords = () => {
-    filteredWords.forEach((word) => {
-      const letter = word.word.toLowerCase().slice(0, 1);
+  if (document.querySelector(".my-cards")) {
+    showAllCards();
+  }
+  async function getUserInfo() {
+    try {
+      userInfoUrl = url + "/auth/me";
+      const response = await fetch(userInfoUrl, {
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          "Access-Control-Allow-Origin": "*",
+          authorization: localStorage.getItem("token"),
+        },
+      });
+      const userData = await response.json();
+      return userData;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  async function getAllWords() {
+    try {
+      allWordsUrl = url + "/words";
+      const response = await fetch(allWordsUrl, {
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+      const allWords = await response.json();
+      if (addinglist) {
+        if (document.querySelector(".cardadding-list")) {
+          const currcard = await getCurrCard();
+          const selectedWords = await currcard.words;
+          allWords.forEach((word) => {
+            const letter = word.name.toLowerCase().slice(0, 1);
+            addinglist.querySelectorAll(".adding-item").forEach((item) => {
+              if (letter === item.querySelector("p").textContent.slice(1, 2)) {
+                let label = document.createElement("label");
+                findWord = selectedWords.indexOf(word.name);
+                console.log(selectedWords);
+                console.log(word);
+                console.log(findWord);
+                if (findWord != -1) {
+                  label.innerHTML = `<input type="checkbox" checked class="word-cb" value="${word.name}"><span>${word.name}</span>`;
+                  addedWords.push(word.name);
+                } else {
+                  label.innerHTML = `<input type="checkbox" class="word-cb" value="${word.name}"><span>${word.name}</span>`;
+                }
+
+                item.querySelector(".words").appendChild(label);
+                item.classList.remove("hide");
+              }
+            });
+          });
+        } else {
+          allWords.forEach((word) => {
+            const letter = word.name.toLowerCase().slice(0, 1);
+            addinglist.querySelectorAll(".adding-item").forEach((item) => {
+              if (letter === item.querySelector("p").textContent.slice(1, 2)) {
+                let label = document.createElement("label");
+                label.innerHTML = `<input type="checkbox" class="word-cb" value="${word.name}"><span>${word.name}</span>`;
+
+                item.querySelector(".words").appendChild(label);
+                item.classList.remove("hide");
+              }
+            });
+          });
+        }
+
+        addinglist.querySelectorAll(".word-cb").forEach((word) => {
+          word.addEventListener("click", () => {
+            if (word.checked) {
+              addedWords.push(word.value);
+              console.log(addedWords);
+              document.querySelector(".btn-add").disabled = false;
+            } else {
+              addedWords.splice(addedWords.indexOf(word.value), 1);
+              if (addedWords.length == 0) {
+                document.querySelector(".btn-add").disabled = true;
+              }
+            }
+          });
+        });
+      }
+      return allWords;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  const addinglist = document.querySelector(".adding-list");
+  if (addinglist) {
+    getAllWords();
+    document.querySelector(".btn-add").addEventListener("click", () => {
+      createNewCard().then((data) => {
+        if (data) {
+          window.location.href = "/personal-cabinet.html";
+        }
+      });
+    });
+    async function createNewCard() {
+      try {
+        newCardUrl = url + "/cards";
+        const response = await fetch(newCardUrl, {
+          method: "POST",
+          body: JSON.stringify({ words: addedWords }),
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+            "Access-Control-Allow-Origin": "*",
+            authorization: localStorage.getItem("token"),
+          },
+        });
+        const data = await response.json();
+        return data;
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    //активирую поиск
+    const search = document.querySelector(".search");
+    search.oninput = (e) => {
+      checkSearch(e);
+      hideUnusedLetter();
+      console.log(addedWords);
+    };
+    //функция поиска
+    const checkSearch = (e) => {
+      if (e.target.value) {
+        let searchValue = e.target.value.trim().toLowerCase();
+        addinglist.querySelectorAll("label").forEach((label) => {
+          label.classList.remove("hide");
+          if (
+            label
+              .querySelector("span")
+              .textContent.toLowerCase()
+              .search(searchValue) === -1
+          ) {
+            label.classList.add("hide");
+          }
+        });
+      } else {
+        addinglist.querySelectorAll("label").forEach((label) => {
+          label.classList.remove("hide");
+        });
+      }
+    };
+
+    //прячу все буквы, где нет слов
+    addedWords = [];
+    const hideUnusedLetter = () => {
       addinglist.querySelectorAll(".adding-item").forEach((item) => {
-        if (letter === item.querySelector("p").textContent.slice(1, 2)) {
-          let label = document.createElement("label");
-          label.innerHTML = `<input type="checkbox" class="word-cb" value="${word.word}"><span>${word.word}</span>`;
-          item.querySelector(".words").appendChild(label);
+        flag = true;
+        item.querySelectorAll("label").forEach((label) => {
+          if (!label.classList.contains("hide")) {
+            flag = false;
+          }
+        });
+        if (flag) {
+          item.classList.add("hide");
+        } else {
           item.classList.remove("hide");
         }
       });
-    });
-  };
+    };
 
-  showFilteredWords();
-  hideUnusedLetter();
-  //добавление/удаление списка слов новой карточки, отключение кнопки
-  addinglist.querySelectorAll(".word-cb").forEach((word) => {
-    word.addEventListener("click", () => {
-      if (word.checked) {
-        addedWords.push(word.value);
-        document.querySelector(".btn-add").disabled = false;
-      } else {
-        addedWords.splice(addedWords.indexOf(word.value), 1);
-        if (addedWords.length == 0) {
-          document.querySelector(".btn-add").disabled = true;
+    hideUnusedLetter();
+    //добавление/удаление списка слов новой карточки, отключение кнопки
+    addinglist.querySelectorAll(".word-cb").forEach((word) => {
+      word.addEventListener("click", () => {
+        if (word.checked) {
+          addedWords.push(word.value);
+          console.log(addedWords);
+          document.querySelector(".btn-add").disabled = false;
+        } else {
+          addedWords.splice(addedWords.indexOf(word.value), 1);
+          if (addedWords.length == 0) {
+            document.querySelector(".btn-add").disabled = true;
+          }
         }
-      }
-      console.log(addedWords);
+      });
     });
-  });
-}
+  }
 });

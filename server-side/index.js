@@ -5,6 +5,7 @@ import {
 	CardsController,
 	StatisticsController,
 	UserController,
+	WordsController,
 } from './controllers/controllers.js'
 import { checkAuth, handleValidationErrors } from './utils/utils.js'
 import { UserValidations } from './validations/validations.js'
@@ -29,12 +30,23 @@ app.post(
 app.get('/api/auth/me', checkAuth, UserController.getMe)
 app.patch('/api/auth/update', checkAuth, UserController.updateMe)
 app.patch('/api/auth/pay', checkAuth, UserController.pay)
+// FIXME:
+app.delete('/api/auth/delete', checkAuth, UserController.remove)
 
-app.post('/api/cards', CardsController.create)
+app.post('/api/cards', checkAuth, CardsController.create)
+app.get('/api/cards', CardsController.getAll)
+app.get('/api/cards/:id', CardsController.getOne)
+// FIXME:
+app.patch('/api/cards/:id', CardsController.update)
 
-app.post('/api/statistics', StatisticsController.create)
+app.get('/api/words', WordsController.getAll)
 
-app.listen(5500, err => {
+// FIXME:
+app.post('/api/statistics', checkAuth, StatisticsController.create)
+app.get('/api/statistics', StatisticsController.getAll)
+app.put('/api/statistics', checkAuth, StatisticsController.update)
+
+app.listen(5000, err => {
 	if (err) {
 		return console.log(err)
 	}
