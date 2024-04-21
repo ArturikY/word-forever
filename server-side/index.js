@@ -42,8 +42,6 @@ app.patch('/api/cards/:id', CardsController.update)
 app.get('/api/words', WordsController.getAll)
 
 // FIXME:
-app.post('/api/statistics', checkAuth, StatisticsController.create)
-app.get('/api/statistics', StatisticsController.getAll)
 app.put('/api/statistics', checkAuth, StatisticsController.update)
 
 app.listen(5000, err => {

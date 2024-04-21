@@ -125,16 +125,41 @@ $(document).ready(function () {
 			confirm_password: 'Пожалуйста, подтвердите пароль',
 			email: 'Пожалуйста, укажите email или телефон',
 		},
-		submitHandler: function (form) {},
-	})
-	if (document.querySelector('.reg-modal')) {
-		document.querySelector('.reg-modal').addEventListener('submit', e => {
-			console.log(validateForm())
+		submitHandler: function (form) {
 			if (validateForm()) {
-				checkLogin(e.target, url + '/auth/register')
+				checkLogin(form, url + '/auth/register')
 			}
-		})
-	}
+		},
+	})
+	$("form[name='editProfileData']").validate({
+		// Specify the validation rules
+		rules: {
+			// firstname: "required", //firstname is corresponding input name
+			password: {
+				required: false,
+				minlength: 6,
+			},
+			confirm_password: {
+				required: false,
+				minlength: 6,
+			},
+			//passowrd:  is corresponding input name
+			email: {
+				required: true,
+				email: true,
+			},
+		},
+		// Specify the validation error messages
+		messages: {
+			// firstname: "Пожалуйста, укажите имя",
+			password: 'Пожалуйста, укажите пароль',
+			confirm_password: 'Пожалуйста, подтвердите пароль',
+			email: 'Пожалуйста, укажите email или телефон',
+		},
+		submitHandler: function (form) {
+			validateForm(editProfileData(form))
+		},
+	})
 
 	// Функция проверки формы
 	function validateForm() {
@@ -186,6 +211,7 @@ $(document).ready(function () {
 
 		return isValid
 	}
+	let addedWords = []
 
 	if (document.querySelectorAll('.tariff-pay-btn')) {
 		// FIXME:
@@ -193,12 +219,16 @@ $(document).ready(function () {
 			btn.addEventListener('click', async () => {
 				if (localStorage.getItem('token')) {
 					let newDateOver = ''
+					let newTariff = ''
 					if (btn.getAttribute('id') === 'btn-tariff-trial') {
 						newDateOver = createNewDateOver(7)
+						newTariff = 'trial'
 					} else if (btn.getAttribute('id') === 'btn-tariff-comfort') {
 						newDateOver = createNewDateOver(30)
+						newTariff = 'comfort'
 					} else if (btn.getAttribute('id') === 'btn-tariff-prof') {
 						newDateOver = createNewDateOver(365)
+						newTariff = 'prof'
 					}
 					const requestOptions = {
 						method: 'PATCH',
@@ -209,6 +239,7 @@ $(document).ready(function () {
 						},
 						body: JSON.stringify({
 							date_over: newDateOver,
+							tariff: newTariff,
 						}),
 					}
 					console.log(url + '/auth/pay')
@@ -323,7 +354,6 @@ $(document).ready(function () {
 	// FIXME:
 	async function isDate(dateString) {
 		// Разбиваем строку даты на компоненты
-		console.log(dateString)
 		if (dateString) {
 			const parts = await dateString.split('.')
 
@@ -375,18 +405,11 @@ $(document).ready(function () {
 			})
 	}
 	deleteProfileBtn = document.querySelector('.confirm-delete-btn')
-	saveDataBtn = document.querySelector('.save-btn')
+
 	if (deleteProfileBtn) {
 		deleteProfileBtn.addEventListener('click', () => {
 			deleteProfile()
 		})
-		if (document.querySelector('.editProfileData')) {
-			document
-				.querySelector('.editProfileData')
-				.addEventListener('submit', e => {
-					editProfileData(e)
-				})
-		}
 	}
 
 	const mainlk = async () => {
@@ -397,18 +420,65 @@ $(document).ready(function () {
 			document.querySelector('.login').value = userInfo.login
 
 			if (await isDate(userInfo?.date_over)) {
+				const statContainer = document
+					.querySelector('.statistcs')
+					.querySelector('tbody')
+				if (userInfo.statistics) {
+					console.log('stat', userInfo.statistics)
+					userInfo.statistics.forEach((stat, index) => {
+						let statInner = document.createElement('tr')
+						statInner.innerHTML = `<td>${index + 1}</td>
+														<td>${stat.word}</td>
+														<td>${stat.errors_count}</td>
+														`
+						statContainer.appendChild(statInner)
+					})
+				}
 				if (document.querySelector('.my-cards')) {
 					showAllCards()
+				}
+				const topTitle = document.querySelector('.top-title')
+				const extendTariff = document.querySelector('.extend')
+				const tariffTitle = document
+					.querySelector('.top-title')
+					.querySelector('span')
+				topTitle.querySelector(
+					'p'
+				).textContent = `Действительна по ${formatDate(userInfo.date_over)}`
+				if (userInfo.tariff === 'trial') {
+					tariffTitle.textContent = 'ПОДПИСКА СТАРТ:'
+					extendTariff.classList.add('hide')
+				}
+				if (userInfo.tariff === 'comfort') {
+					const comfort = document.querySelector('.comfort')
+					comfort.textContent = 'Действительна'
+					comfort.classList.add('subs-btn')
+					comfort.disabled = true
+					comfort.classList.add('disabled')
+					tariffTitle.textContent = 'ПОДПИСКА КОМФОРТ:'
+				}
+				if (userInfo.tariff === 'prof') {
+					const prof = document.querySelector('.prof')
+					prof.textContent = 'Действительна'
+					prof.classList.add('subs-btn')
+					prof.disabled = true
+					prof.classList.add('disabled')
+					tariffTitle.textContent = 'ПОДПИСКА ПРОФИ:'
 				}
 				const addinglist = document.querySelector('.adding-list')
 				if (addinglist) {
 					getAllWords()
-					document.querySelector('.btn-add').addEventListener('click', () => {
-						createNewCard().then(data => {
-							if (data) {
-								window.location.href = '/personal-cabinet.html'
-							}
-						})
+					document.querySelector('.btn-add').addEventListener('click', e => {
+						if (e.target.classList.contains('btn-addyet')) {
+							editCard()
+						} else {
+							createNewCard().then(data => {
+								if (data) {
+									window.localStorage.setItem('cardId', data.id)
+								}
+							})
+						}
+						window.location.href = '/card.html'
 					})
 					async function createNewCard() {
 						try {
@@ -428,13 +498,32 @@ $(document).ready(function () {
 							console.error(e)
 						}
 					}
+					async function editCard() {
+						try {
+							cardId = window.localStorage.getItem('cardId')
+							editCardUrl = url + '/cards/' + cardId
+							const response = await fetch(editCardUrl, {
+								method: 'PATCH',
+								body: JSON.stringify({ words: addedWords }),
+								headers: {
+									'Content-type': 'application/json; charset=UTF-8',
+									'Access-Control-Allow-Origin': '*',
+									authorization: localStorage.getItem('token'),
+								},
+							})
+							const data = await response.json()
+							return data
+						} catch (e) {
+							console.error(e)
+						}
+					}
+
 					const addinglist = document.querySelector('.adding-list')
 					//активирую поиск
 					const search = document.querySelector('.search')
 					search.oninput = e => {
 						checkSearch(e)
 						hideUnusedLetter()
-						console.log(addedWords)
 					}
 					//функция поиска
 					const checkSearch = e => {
@@ -459,7 +548,7 @@ $(document).ready(function () {
 					}
 
 					//прячу все буквы, где нет слов
-					addedWords = []
+
 					const hideUnusedLetter = () => {
 						addinglist.querySelectorAll('.adding-item').forEach(item => {
 							flag = true
@@ -475,23 +564,8 @@ $(document).ready(function () {
 							}
 						})
 					}
-
 					hideUnusedLetter()
 					//добавление/удаление списка слов новой карточки, отключение кнопки
-					addinglist.querySelectorAll('.word-cb').forEach(word => {
-						word.addEventListener('click', () => {
-							if (word.checked) {
-								addedWords.push(word.value)
-								console.log(addedWords)
-								document.querySelector('.btn-add').disabled = false
-							} else {
-								addedWords.splice(addedWords.indexOf(word.value), 1)
-								if (addedWords.length == 0) {
-									document.querySelector('.btn-add').disabled = true
-								}
-							}
-						})
-					})
 				}
 			} else {
 				document.querySelector('.add-btn').href = '#'
@@ -519,13 +593,13 @@ $(document).ready(function () {
 			const unsubscribed = document.querySelector('.unsubscribed')
 			const subscribed = document.querySelector('.subscribed')
 			const aftertrial = document.querySelector('.aftertrial')
-			if (userInfo.isTrial) {
-				unsubscribed.classList.add('hide')
-				aftertrial.classList.add('hide')
-			} else if (userInfo) {
-				unsubscribed.classList.add('hide')
-				subscribed.classList.add('hide')
-			}
+			// if (userInfo.isTrial) {
+			// 	unsubscribed.classList.add('hide')
+			// 	aftertrial.classList.add('hide')
+			// } else if (userInfo) {
+			// 	unsubscribed.classList.add('hide')
+			// 	subscribed.classList.add('hide')
+			// }
 		} else {
 			window.location.href = '/index.html'
 		}
@@ -533,11 +607,34 @@ $(document).ready(function () {
 	if (document.querySelector('.statistcs')) {
 		mainlk()
 	}
+	function formatDate(inputDate) {
+		// Разбиваем строку на компоненты
+		var parts = inputDate.split('.')
 
+		// Проверяем, что строка содержит 3 компонента (день, месяц, год)
+		if (parts.length === 3) {
+			var day = parts[0]
+			var month = parts[1]
+			var year = parts[2]
+
+			// Добавляем нуль перед числами, если они состоят из одной цифры
+			if (day.length === 1) {
+				day = '0' + day
+			}
+			if (month.length === 1) {
+				month = '0' + month
+			}
+
+			// Возвращаем преобразованную дату в формате "дд.мм.гггг"
+			return day + '.' + month + '.' + year
+		} else {
+			// Если строка не соответствует формату "дд.м.гггг", возвращаем исходную строку
+			return inputDate
+		}
+	}
 	async function editProfileData(ev) {
 		try {
-			ev.preventDefault()
-			personalData = new FormData(ev.target)
+			personalData = new FormData(ev)
 			const personalDataObj = Object.fromEntries(personalData.entries())
 			console.log(personalDataObj)
 			editProfileUrl = url + '/auth/update'
@@ -555,7 +652,7 @@ $(document).ready(function () {
 		} catch (e) {
 			console.error(e)
 		}
-		ev.target.reset()
+		ev.reset()
 		DrawUserInfo()
 	}
 	async function deleteProfile() {
@@ -575,10 +672,36 @@ $(document).ready(function () {
 			console.error(e)
 		}
 	}
+	const DrawUserInfo = async () => {
+		userInfo = await getUserInfo()
+		console.log(userInfo)
+		document.querySelector('.child_name').value = userInfo.child_name
+		document.querySelector('.login').value = userInfo.login
+
+		if (!(await isDate(userInfo?.date_over))) {
+			document.getElementById('v-pills-home-tab').classList.remove('active')
+			document.getElementById('v-pills-home').classList.remove('active')
+			document.getElementById('v-pills-home').classList.remove('show')
+
+			document.getElementById('v-pills-messages-tab').classList.add('active')
+			document.getElementById('v-pills-settings').classList.add('active')
+			document.getElementById('v-pills-settings').classList.add('show')
+		}
+
+		const unsubscribed = document.querySelector('.unsubscribed')
+		const subscribed = document.querySelector('.subscribed')
+		const aftertrial = document.querySelector('.aftertrial')
+		if (userInfo.isTrial) {
+			unsubscribed.classList.add('hide')
+			aftertrial.classList.add('hide')
+		} else if (userInfo) {
+			unsubscribed.classList.add('hide')
+			subscribed.classList.add('hide')
+		}
+	}
 	async function getCurrCard() {
 		try {
 			cardId = window.localStorage.getItem('cardId')
-			console.log(cardId)
 			requestCardUrl = url + '/cards/' + cardId
 			const response = await fetch(requestCardUrl, {
 				method: 'GET',
@@ -594,6 +717,7 @@ $(document).ready(function () {
 			console.error(e)
 		}
 	}
+
 	async function showAllCards() {
 		const userInfo = await getUserInfo()
 		const cards = userInfo.cards
@@ -657,12 +781,44 @@ $(document).ready(function () {
 	async function drawCurrCard() {
 		const currcard = await getCurrCard()
 		const wordsContainer = document.querySelector('.card-words-item')
+		const imagesContainer = document
+			.getElementById('word-modal')
+			.querySelector('.swiper-wrapper')
 		console.log(currcard)
 		currcard.words.forEach(word => {
 			let wordhtml = document.createElement('p')
 			wordhtml.innerHTML = `${word}`
 			wordsContainer.appendChild(wordhtml)
+
+			let imageHtml = document.createElement('div')
+			imageHtml.classList.add('swiper-slide')
+			imageHtml.innerHTML = `<div class="swiper-slide">
+			                              <div class="slide-img">
+			                                  <img src="images/words/${word}.png" alt="${word}">
+			                              </div>
+			                          </div>`
+			imagesContainer.appendChild(imageHtml)
 		})
+		let lastImage = document.createElement('div')
+		lastImage.classList.add('swiper-slide')
+		lastImage.innerHTML = `<div class="swiper-slide">
+									<div class="slide-last">
+										<img
+											src="images/slide-last-img.png"
+											alt=""
+											class="last-bg"
+										/>
+
+										<div class="slide-title">
+											<p>ВЫ ПРОСМОТРЕЛИ ВСЕ СЛОВА!</p>
+											<span>Можете перейти к тестам</span>
+										</div>
+										<div class="slide-btn">
+											<a href="test.html">Пройти тестирование</a>
+										</div>
+									</div>
+								</div>`
+		imagesContainer.appendChild(lastImage)
 	}
 	async function sendTestResults(results) {
 		try {
@@ -730,24 +886,31 @@ $(document).ready(function () {
 						break
 					} else {
 						correctCount += 1
+						break
 					}
-					console.log(
-						'введенная',
-						insertLetter,
-						'правильная',
-						correctLetter,
-						'в слове',
-						currWords[x].name
-					)
 				}
 			}
-			console.log(mistakes)
-			sendTestResults(mistakes).then(stat => console.log(stat))
+
+			sendTestResults(mistakes)
 			window.localStorage.setItem('correctWords', correctCount)
+			window.localStorage.setItem('AllWordsOfCard', currcard.words.length)
+			console.log(window.localStorage.getItem('correctWords'))
+			console.log(window.localStorage.getItem('AllWordsOfCard'))
+			if (mistakes.length !== 0) {
+				window.location.href = 'fail.html'
+			} else {
+				window.location.href = 'no-mistakes.html'
+			}
 		})
 	}
 	if (document.querySelector('.test-list')) {
 		drawCurrTest()
+	}
+	if (document.querySelector('.correctWords')) {
+		document.querySelector('.correctWords').textContent =
+			window.localStorage.getItem('correctWords')
+		document.querySelector('.AllWordsOfCard').textContent =
+			window.localStorage.getItem('AllWordsOfCard')
 	}
 
 	async function getUserInfo() {
@@ -781,26 +944,25 @@ $(document).ready(function () {
 				if (document.querySelector('.cardadding-list')) {
 					const currcard = await getCurrCard()
 					const selectedWords = await currcard.words
+					console.log(addedWords)
+					if (addedWords.length != 0) {
+						document.querySelector('.btn-add').disabled = false
+					}
 					allWords.forEach(word => {
 						const letter = word.name.toLowerCase().slice(0, 1)
-						addinglist.querySelectorAll('.adding-item').forEach(item => {
-							if (letter === item.querySelector('p').textContent.slice(1, 2)) {
-								let label = document.createElement('label')
-								findWord = selectedWords.indexOf(word.name)
-								console.log(selectedWords)
-								console.log(word)
-								console.log(findWord)
-								if (findWord != -1) {
-									label.innerHTML = `<input type="checkbox" checked class="word-cb" value="${word.name}"><span>${word.name}</span>`
-									addedWords.push(word.name)
-								} else {
-									label.innerHTML = `<input type="checkbox" class="word-cb" value="${word.name}"><span>${word.name}</span>`
-								}
+						const wordCurrContainer = document.querySelector(`.item-${letter}`)
 
-								item.querySelector('.words').appendChild(label)
-								item.classList.remove('hide')
-							}
-						})
+						let label = document.createElement('label')
+						findWord = selectedWords.indexOf(word.name)
+
+						if (findWord != -1) {
+							label.innerHTML = `<input type="checkbox" checked class="word-cb" value="${word.name}"><span>${word.name}</span>`
+							addedWords.push(word.name)
+						} else {
+							label.innerHTML = `<input type="checkbox" class="word-cb" value="${word.name}"><span>${word.name}</span>`
+						}
+						wordCurrContainer.querySelector('.words').appendChild(label)
+						wordCurrContainer.classList.remove('hide')
 					})
 				} else {
 					allWords.forEach(word => {
@@ -819,12 +981,16 @@ $(document).ready(function () {
 
 				addinglist.querySelectorAll('.word-cb').forEach(word => {
 					word.addEventListener('click', () => {
+						if (addedWords.length != 0) {
+							document.querySelector('.btn-add').disabled = false
+						}
 						if (word.checked) {
 							addedWords.push(word.value)
 							console.log(addedWords)
 							document.querySelector('.btn-add').disabled = false
 						} else {
 							addedWords.splice(addedWords.indexOf(word.value), 1)
+							console.log(addedWords)
 							if (addedWords.length == 0) {
 								document.querySelector('.btn-add').disabled = true
 							}

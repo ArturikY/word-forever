@@ -166,6 +166,7 @@ export const pay = async (req, res) => {
 			data: {
 				date_over: req.body.date_over,
 				isTrial: true,
+				tariff: req.body.tariff,
 			},
 		})
 
@@ -186,6 +187,17 @@ export const pay = async (req, res) => {
 // FIXME:
 export const remove = async (req, res) => {
 	try {
+		await prisma.card.deleteMany({
+			where: {
+				userId: req.userId,
+			},
+		})
+		await prisma.statistics.deleteMany({
+			where: {
+				userId: req.userId,
+			},
+		})
+
 		const user = await prisma.user.delete({
 			where: {
 				id: req.userId,

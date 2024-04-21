@@ -639,6 +639,25 @@ header .head-social a:hover {
 	background: #0075ff;
 	margin-top: 14px;
 }
+
+.extend {
+	font-size: 16px;
+	font-weight: 700;
+	line-height: 19px;
+	color: #fff;
+	-webkit-box-shadow: 0px 4px 4px 0px #00000040;
+	box-shadow: 0px 4px 4px 0px #00000040;
+	padding: 16px 26px;
+	border-radius: 10px;
+	background: #0075ff;
+	margin-top: 14px;
+}
+.extend.hide {
+	display: none;
+}
+.extend:hover {
+	background: #0050ab;
+}
 .subs-block .subs-link .blue-btn.disabled {
 	background: #797979;
 	cursor: not-allowed;
