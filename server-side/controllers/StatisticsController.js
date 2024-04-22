@@ -76,3 +76,37 @@ export const update = async (req, res) => {
 		})
 	}
 }
+
+/* export const create = async (req, res) => {
+	try {
+		const card = await prisma.statistics.create({
+			data: {
+				word: req.body.word,
+				errors_count: req.body.errors_count,
+				user: { connect: { id: req.userId } },
+			},
+			include: {
+				user: include,
+			},
+		})
+		res.json(card)
+	} catch (err) {
+		console.log(err)
+		res.status(500).json({
+			message: 'Failed to create a card',
+		})
+	}
+}
+
+
+export const getAll = async (req, res) => {
+	try {
+		const statistics = await prisma.statistics.findMany()
+		res.json(statistics)
+	} catch (err) {
+		console.log(err)
+		res.status(500).json({
+			message: 'Failed to get statistics',
+		})
+	}
+} */

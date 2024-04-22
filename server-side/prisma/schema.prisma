@@ -35,7 +35,6 @@ model Card {
 model Word {
   id  Int   @id @default(autoincrement())
   name  String
-  image_url String
   letters String
 }
 

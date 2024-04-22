@@ -104,6 +104,7 @@ $(document).ready(function () {
 		// Specify the validation rules
 		rules: {
 			// firstname: "required", //firstname is corresponding input name
+
 			password: {
 				required: true,
 				minlength: 6,
@@ -135,12 +136,13 @@ $(document).ready(function () {
 		// Specify the validation rules
 		rules: {
 			// firstname: "required", //firstname is corresponding input name
+
 			password: {
-				required: false,
+				required: true,
 				minlength: 6,
 			},
 			confirm_password: {
-				required: false,
+				required: true,
 				minlength: 6,
 			},
 			//passowrd:  is corresponding input name
@@ -157,7 +159,9 @@ $(document).ready(function () {
 			email: 'Пожалуйста, укажите email или телефон',
 		},
 		submitHandler: function (form) {
-			validateForm(editProfileData(form))
+			if (validateForm()) {
+				editProfileData(form)
+			}
 		},
 	})
 
@@ -166,7 +170,7 @@ $(document).ready(function () {
 		var isValid = true
 
 		// Проверка имени
-		var nameInput = $('#name')
+		var nameInput = $('[name="child_name"]')
 		if ($.trim(nameInput.val()) === '') {
 			setErrorFor(nameInput, 'Пожалуйста, введите имя ребенка.')
 			isValid = false
@@ -175,7 +179,7 @@ $(document).ready(function () {
 		}
 
 		// Проверить электронную почту
-		var emailInput = $('#email')
+		var emailInput = $('[name="login"]')
 		if ($.trim(emailInput.val()) === '') {
 			setErrorFor(emailInput, 'Пожалуйста, введите вашу почту.')
 			isValid = false
@@ -187,7 +191,7 @@ $(document).ready(function () {
 		}
 
 		// Подтверждаем пароль
-		var passwordInput = $('#password')
+		var passwordInput = $('[name="password"]')
 		if ($.trim(passwordInput.val()) === '') {
 			setErrorFor(passwordInput, 'Пожалуйста, введите ваш пароль.')
 			isValid = false
@@ -196,7 +200,7 @@ $(document).ready(function () {
 		}
 
 		// Подтвердите пароль
-		var confirmPasswordInput = $('#confirm_password')
+		var confirmPasswordInput = $('[name="confirm_password"]')
 		if ($.trim(confirmPasswordInput.val()) === '') {
 			setErrorFor(confirmPasswordInput, 'Введите подтверждение пароля.')
 			isValid = false
@@ -471,14 +475,17 @@ $(document).ready(function () {
 					document.querySelector('.btn-add').addEventListener('click', e => {
 						if (e.target.classList.contains('btn-addyet')) {
 							editCard()
+							window.location.href = '/card.html'
 						} else {
 							createNewCard().then(data => {
 								if (data) {
+									console.log(data)
 									window.localStorage.setItem('cardId', data.id)
+									console.log(window.localStorage.getItem('cardId'))
+									window.location.href = '/card.html'
 								}
 							})
 						}
-						window.location.href = '/card.html'
 					})
 					async function createNewCard() {
 						try {
@@ -590,16 +597,7 @@ $(document).ready(function () {
       </div>`
 				document.querySelector('body').appendChild(alert)
 			}
-			const unsubscribed = document.querySelector('.unsubscribed')
 			const subscribed = document.querySelector('.subscribed')
-			const aftertrial = document.querySelector('.aftertrial')
-			// if (userInfo.isTrial) {
-			// 	unsubscribed.classList.add('hide')
-			// 	aftertrial.classList.add('hide')
-			// } else if (userInfo) {
-			// 	unsubscribed.classList.add('hide')
-			// 	subscribed.classList.add('hide')
-			// }
 		} else {
 			window.location.href = '/index.html'
 		}
@@ -687,21 +685,10 @@ $(document).ready(function () {
 			document.getElementById('v-pills-settings').classList.add('active')
 			document.getElementById('v-pills-settings').classList.add('show')
 		}
-
-		const unsubscribed = document.querySelector('.unsubscribed')
-		const subscribed = document.querySelector('.subscribed')
-		const aftertrial = document.querySelector('.aftertrial')
-		if (userInfo.isTrial) {
-			unsubscribed.classList.add('hide')
-			aftertrial.classList.add('hide')
-		} else if (userInfo) {
-			unsubscribed.classList.add('hide')
-			subscribed.classList.add('hide')
-		}
 	}
 	async function getCurrCard() {
 		try {
-			cardId = window.localStorage.getItem('cardId')
+			let cardId = window.localStorage.getItem('cardId')
 			requestCardUrl = url + '/cards/' + cardId
 			const response = await fetch(requestCardUrl, {
 				method: 'GET',
@@ -719,6 +706,9 @@ $(document).ready(function () {
 	}
 
 	async function showAllCards() {
+		const loading = document
+			.querySelector('.mycards__container')
+			.querySelector('.loading')
 		const userInfo = await getUserInfo()
 		const cards = userInfo.cards
 		const cardsContainer = document.querySelector('.mycards__container')
@@ -750,6 +740,12 @@ $(document).ready(function () {
           </div>`
 				cardsContainer.appendChild(cardhtml)
 			})
+			loading.classList.add('hide')
+			setTimeout(() => {
+				cardsContainer.querySelectorAll('.card-item').forEach(card => {
+					card.classList.add('show')
+				})
+			}, 10)
 		}
 		//Обработка нажатия кнопок/передача id карточки
 		document.querySelectorAll('.openCard').forEach(btn => {
@@ -779,6 +775,9 @@ $(document).ready(function () {
 	}
 
 	async function drawCurrCard() {
+		const loading = document
+			.querySelector('.card-words')
+			.querySelector('.loading')
 		const currcard = await getCurrCard()
 		const wordsContainer = document.querySelector('.card-words-item')
 		const imagesContainer = document
@@ -819,6 +818,7 @@ $(document).ready(function () {
 									</div>
 								</div>`
 		imagesContainer.appendChild(lastImage)
+		loading.classList.add('hide')
 	}
 	async function sendTestResults(results) {
 		try {
@@ -842,6 +842,7 @@ $(document).ready(function () {
 	async function drawCurrTest() {
 		const currcard = await getCurrCard()
 		const allWords = await getAllWords()
+		// console.log(allWords)
 		const wordsContainer = document.querySelector('.test-list')
 		const input = '<input class="wordinput" type="text" maxlength="1">'
 		const inputLength = input.length
@@ -873,29 +874,34 @@ $(document).ready(function () {
 				solvedWords.push(solvedCurrWord)
 			})
 			console.log('solvedwords', solvedWords)
-			correctCount = 0
+			mistakesCount = 0
 			mistakes = []
 			for (let x = 0; x < currWords.length; x++) {
 				flag = true
 				for (let y = 0; y < currWords[x].letters.split(' ').length; y++) {
-					correctLetter = currWords[x].name[currWords[x].letters.split(' ')[y]]
-					insertLetter = solvedWords[x][y]
+					correctLetter =
+						currWords[x].name[currWords[x].letters.split(' ')[y]].toLowerCase()
+					insertLetter = solvedWords[x][y].toLowerCase()
+					console.log('введенный:', insertLetter)
+					console.log('корректный:', correctLetter)
 					if (correctLetter != insertLetter) {
 						flag = false
 						mistakes.push(currWords[x].name)
-						break
-					} else {
-						correctCount += 1
+						mistakesCount += 1
 						break
 					}
 				}
 			}
 
 			sendTestResults(mistakes)
-			window.localStorage.setItem('correctWords', correctCount)
+			window.localStorage.setItem(
+				'correctWords',
+				currcard.words.length - mistakesCount
+			)
 			window.localStorage.setItem('AllWordsOfCard', currcard.words.length)
 			console.log(window.localStorage.getItem('correctWords'))
 			console.log(window.localStorage.getItem('AllWordsOfCard'))
+			console.log(mistakes)
 			if (mistakes.length !== 0) {
 				window.location.href = 'fail.html'
 			} else {
@@ -939,8 +945,13 @@ $(document).ready(function () {
 				},
 			})
 			const allWords = await response.json()
+			console.log('func allwords:', allWords)
 			const addinglist = document.querySelector('.adding-list')
 			if (addinglist) {
+				const addingblock = document.querySelector('.adding-block')
+				const loading = document
+					.querySelector('.adding-words')
+					.querySelector('.loading')
 				if (document.querySelector('.cardadding-list')) {
 					const currcard = await getCurrCard()
 					const selectedWords = await currcard.words
@@ -978,6 +989,10 @@ $(document).ready(function () {
 						})
 					})
 				}
+				setTimeout(() => {
+					loading.classList.add('hide')
+					addingblock.classList.remove('hide')
+				}, 10)
 
 				addinglist.querySelectorAll('.word-cb').forEach(word => {
 					word.addEventListener('click', () => {

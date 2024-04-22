@@ -23,6 +23,7 @@ h6 {
 	text-decoration: none;
 	line-height: 1.2;
 }
+
 button:focus,
 textarea:focus,
 select:focus {
@@ -1083,9 +1084,27 @@ header .head-social a:hover {
 .subs-tab .subs-block.active .subs-img img {
 	height: 85px;
 }
+.mycards__container {
+	position: relative;
+}
+.adding-words {
+	position: relative;
+}
 
+.loading {
+	width: 80px;
+	height: 80px;
+	position: absolute;
+	top: calc(50% - 40px);
+	left: calc(50% - 40px);
+}
+.loading.hide {
+	display: none;
+}
 /* my cards */
 .card-item {
+	transition: all 0.3s ease-in-out;
+	opacity: 0;
 	height: 400px;
 	-webkit-box-shadow: 0px 4px 4px 0px #00000040;
 	box-shadow: 0px 4px 4px 0px #00000040;
@@ -1106,6 +1125,9 @@ header .head-social a:hover {
 	padding: 20px 24px 24px;
 	border-radius: 10px;
 }
+.card-item.show {
+	opacity: 1;
+}
 .add-card {
 	background: #f2d842;
 	-webkit-box-pack: center;
@@ -1116,6 +1138,7 @@ header .head-social a:hover {
 	border: none;
 	background: transparent;
 }
+
 path {
 	-webkit-transition: 0.3s all ease;
 	-o-transition: 0.3s all ease;
@@ -1124,9 +1147,7 @@ path {
 .add-card .add-btn:hover svg path {
 	fill: #0075ff;
 }
-.hide {
-	display: none;
-}
+
 .card-item .item-title {
 	text-align: center;
 	margin-bottom: 14px;
@@ -1522,6 +1543,7 @@ button {
 	transform: scale(1.1);
 }
 .card-words {
+	position: relative;
 	height: 418px;
 	overflow-x: hidden;
 	overflow-y: auto;
@@ -3164,4 +3186,7 @@ footer .ftr-end a {
 	.mob-btns a:hover {
 		text-decoration: none;
 	}
+}
+.hide {
+	display: none;
 }

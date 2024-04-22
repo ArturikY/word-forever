@@ -18,10 +18,6 @@ export const register = async (req, res) => {
 				password: passwordHash,
 				child_name: req.body.child_name,
 			},
-			include: {
-				statistics: true,
-				cards: true,
-			},
 		})
 
 		const token = jwt.sign(
@@ -51,10 +47,6 @@ export const login = async (req, res) => {
 		const user = await prisma.user.findUnique({
 			where: {
 				login: req.body.login,
-			},
-			include: {
-				statistics: true,
-				cards: true,
 			},
 		})
 
@@ -101,7 +93,11 @@ export const getMe = async (req, res) => {
 				id: req.userId,
 			},
 			include: {
-				statistics: true,
+				statistics: {
+					orderBy: {
+						errors_count: 'desc',
+					},
+				},
 				cards: true,
 			},
 		})
@@ -136,6 +132,7 @@ export const updateMe = async (req, res) => {
 				password: passwordHash,
 				child_name: req.body.child_name,
 			},
+			// TODO:
 			include: {
 				statistics: true,
 				cards: true,
